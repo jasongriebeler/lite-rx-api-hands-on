@@ -16,6 +16,7 @@
 
 package io.pivotal.literx;
 
+import java.time.Duration;
 import java.util.function.Supplier;
 
 import io.pivotal.literx.domain.User;
@@ -73,7 +74,10 @@ public class Part03StepVerifier {
 	// TODO Expect 3600 elements then complete using the virtual time capabilities provided
 	// via StepVerifier#withVirtualTime and notice how long the test takes
 	void expect3600Elements(Supplier<Flux<Long>> supplier) {
-		fail();
+		StepVerifier.withVirtualTime(supplier)
+                .thenAwait(Duration.ofHours(1))
+                .expectNextCount(3600)
+                .verifyComplete();
 	}
 
 	private void fail() {
